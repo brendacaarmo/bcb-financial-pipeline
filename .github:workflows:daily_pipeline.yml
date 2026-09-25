@@ -1,0 +1,34 @@
+name: Pipeline Diário de Indicadores Financeiros
+
+on:
+  schedule:
+    # Roda todos os dias às 09:00 UTC (06:00 no horário de Brasília)
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    # Permite rodar manualmente pelo botão "Run workflow" no GitHub
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Rodar o pipeline
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          BCB_API_BASE_URL: ${{ secrets.BCB_API_BASE_URL }}
+        run: python -m src.pipeline
