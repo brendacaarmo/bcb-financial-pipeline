@@ -18,5 +18,19 @@ services:
       timeout: 5s
       retries: 5
 
+  pipeline:
+    build: .
+    container_name: bcb_pipeline_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      BCB_API_BASE_URL: ${BCB_API_BASE_URL}
+
 volumes:
   postgres_data:
