@@ -1,0 +1,26 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Variáveis de ambiente e segredos
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Banco de dados local (se usarmos SQLite em algum teste)
+*.db
+*.sqlite3
+
+# Sistema operacional
+.DS_Store
+
+# Editor
+.vscode/
+!.vscode/extensions.json
+
+# Docker
+postgres_data/
