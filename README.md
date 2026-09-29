@@ -1,4 +1,4 @@
-# Pipeline de Dados Automatizado — Indicadores Financeiros (BCB)
+# Pipeline de Dados Automatizado de Indicadores Financeiros (BCB)
 
 Pipeline de dados automatizado que coleta diariamente indicadores econômicos do
 **Banco Central do Brasil** (Dólar, Selic, IPCA) via API pública (SGS), valida e
@@ -107,12 +107,7 @@ Também pode ser disparado manualmente pela aba **Actions** do repositório
 Veja [`sql/queries.sql`](sql/queries.sql) para exemplos de análises que podem
 ser feitas diretamente no banco, como cotação média mensal e variação do dólar.
 
-## Próximos passos
-
-- [ ] Dashboard em Power BI consumindo os dados deste pipeline
-- [ ] Camada de resumo diário automatizado via API de LLM
-
 ## Autora
 
-Brenda Julia Carmo Silva — [LinkedIn](https://www.linkedin.com/in/brenda-carmo-151b12208/)
+Brenda Carmo  - [LinkedIn](https://www.linkedin.com/in/brenda-carmo-151b12208/)
 
