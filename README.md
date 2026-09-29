@@ -1,9 +1,8 @@
-# Pipeline de Dados Automatizado de Indicadores Financeiros (BCB)
+# Pipeline Automatizado de Indicadores Financeiros (BCB)
 
 Pipeline de dados automatizado que coleta diariamente indicadores econômicos do
 **Banco Central do Brasil** (Dólar, Selic, IPCA) via API pública (SGS), valida e
-transforma os dados, e os armazena em um banco **PostgreSQL** na nuvem — pronto
-para consumo em ferramentas de BI como Power BI.
+transforma os dados, e os armazena em um banco **PostgreSQL** na nuvem.
 
 A execução é 100% automatizada via **GitHub Actions**, rodando diariamente sem
 intervenção manual.
@@ -109,5 +108,5 @@ ser feitas diretamente no banco, como cotação média mensal e variação do d�
 
 ## Autora
 
-Brenda Carmo  - [LinkedIn](https://www.linkedin.com/in/brenda-carmo-151b12208/)
+Brenda Carmo - [LinkedIn](https://www.linkedin.com/in/brenda-carmo-151b12208/)
 
