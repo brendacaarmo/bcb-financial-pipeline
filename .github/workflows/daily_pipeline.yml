@@ -29,4 +29,5 @@ jobs:
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
           BCB_API_BASE_URL: ${{ secrets.BCB_API_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: python -m src.pipeline

@@ -32,5 +32,6 @@ POSTGRES_PORT = _get_env("POSTGRES_PORT")
 # --- API do Banco Central (SGS) ---
 BCB_API_BASE_URL = _get_env("BCB_API_BASE_URL")
 
-# --- Fase 2: LLM (opcional por enquanto, não obrigatório) ---
+# --- Resumo diário com IA (Gemini). Opcional: sem chave, usa texto sem IA ---
 LLM_API_KEY = _get_env("LLM_API_KEY", required=False)
+LLM_MODEL = _get_env("LLM_MODEL", required=False) or "gemini-3.5-flash-lite"

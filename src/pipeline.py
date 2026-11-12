@@ -8,8 +8,10 @@ import sys
 import time
 from datetime import date, timedelta
 
+from src.config import LLM_API_KEY, LLM_MODEL
 from src.extract import fetch_all_series
-from src.load import load_records
+from src.llm_summary import generate_and_save
+from src.load import get_connection, load_records
 from src.logger import get_logger
 from src.transform import clean_all_series
 
@@ -18,6 +20,26 @@ logger = get_logger(__name__)
 # Janela de coleta: 90 dias garante que séries mensais (como o IPCA)
 # tenham ao menos um valor publicado no período.
 LOOKBACK_DAYS = 90
+
+
+def generate_daily_summary() -> None:
+    """
+    Gera o resumo diário com IA e grava no banco.
+    É um passo extra: se falhar, apenas avisa no log e NÃO derruba o pipeline
+    principal (os dados já foram gravados).
+    """
+    conn = None
+    try:
+        conn = get_connection()
+        generate_and_save(conn, LLM_API_KEY, LLM_MODEL)
+    except Exception:
+        logger.warning(
+            "Resumo diário não foi gerado. O pipeline principal não foi afetado.",
+            exc_info=True,
+        )
+    finally:
+        if conn:
+            conn.close()
 
 
 def run() -> None:
@@ -32,6 +54,7 @@ def run() -> None:
         raw_data = fetch_all_series(start_date=start_date, end_date=today)
         clean_data = clean_all_series(raw_data)
         loaded_count = load_records(clean_data)
+        generate_daily_summary()
 
         elapsed = time.monotonic() - start_time
         logger.info(
