@@ -28,6 +28,13 @@
 ┌─────────────────┐
 │ Supabase │ PostgreSQL gerenciado, persistente,
 │ (PostgreSQL) │ acessível externamente (ex: Power BI)
+└────────┬─────────┘
+│ lê `indicadores`
+▼
+┌─────────────────┐
+│ llm_summary.py │ Calcula os fatos em Python, pede o texto ao
+│ │ Gemini, verifica os números e grava em
+│ │ `resumos_diarios` (com plano B sem IA)
 └──────────────────┘
 
 Orquestração: pipeline.py (ponto de entrada único)
@@ -74,11 +81,33 @@ meio da execução. `logger.py` centraliza o logging estruturado, usado por
 todos os módulos em vez de `print()`, facilitando debugging em produção
 (os logs do GitHub Actions dependem inteiramente disso).
 
+### Resumo com IA: a IA escreve, o código calcula e confere
+Os números do resumo (valor atual, variações, mínimo e máximo) são calculados em
+Python e entregues ao modelo como JSON. O modelo só escreve o texto. Antes de
+gravar, `verify_summary` confere se todo número citado existe nos fatos (aceitando
+arredondamento) e reprova textos com recomendação, previsão ou explicação de
+causa. Isso reduz o risco de a IA inventar valores, mas não elimina todos os
+erros: a verificação não entende o sentido do texto. Detalhes em
+[`llm_summary.md`](llm_summary.md).
+
+### Plano B sem IA e falha isolada
+Se a API do Gemini falhar, ficar fora do ar ou o texto for reprovado duas vezes,
+o resumo é montado por regras fixas (`template_summary`). A coluna `source` da
+tabela `resumos_diarios` registra se o texto veio de `llm` ou de `template`.
+Esse passo roda depois da carga dos dados e qualquer falha nele vira apenas um
+aviso no log: o pipeline principal não é derrubado.
+
+### Prompt versionado
+O prompt fica em `prompts/daily_summary_v1.txt` e a versão usada é gravada na
+coluna `prompt_version`. Assim é possível comparar resultados quando o prompt mudar.
+
 ## Possíveis evoluções futuras
 
 - Migrar a execução do GitHub Actions de "instalar Python direto" para rodar
   via imagem Docker publicada, garantindo paridade total entre ambiente local
   e produção.
-- Adicionar uma camada de resumo diário via API de LLM (`llm_summary.py`,
-  já planejado na estrutura do projeto).
 - Adicionar alertas (ex.: notificação) em caso de falha do pipeline.
+- Manter o projeto do Supabase ativo com uma chamada diária (o plano gratuito
+  pausa projetos com pouca atividade).
+- Agente "Pergunte ao BCB": perguntas em linguagem natural convertidas em
+  consultas SQL somente leitura, com validação e conjunto de testes de acurácia.
